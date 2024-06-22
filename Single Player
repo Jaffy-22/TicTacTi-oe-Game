@@ -1,0 +1,176 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.ladera.tictactoe;
+
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Jaffy
+ */
+public class SinglePlayer {
+    public static void singlePlayer() {
+        Scanner scan = new Scanner(System.in);
+        int n = 3;
+        char[][] arr = new char[n][n];
+        System.out.println("Choose Your Symbol:\n1.X\n2.Y");
+        int userChoice = scan.nextInt();
+
+        char playerSymbol = (userChoice == 1) ? 'X' : 'Y';
+        char computerSymbol = (playerSymbol == 'X') ? 'Y' : 'X';
+
+        Random random = new Random();
+        boolean isX = random.nextBoolean();  // Randomly choose who starts
+        boolean isY = !isX;
+
+        displayBoard(arr, n);
+
+        int notPlacedCount = n * n;
+        
+        if(isX)
+        {
+            if(userChoice==1)
+            {
+                System.out.println("You Start The Game.");
+            }
+            else
+                System.out.println("Your Opponent Start The Game.");
+        }
+        if(isY)
+        {
+            if(userChoice==2)
+                System.out.println("You Start The Game.");
+            else
+                System.out.println("Your Opponent Start The Game.");
+        }
+        while (notPlacedCount > 0) {
+            if (isX) {
+                System.out.println("Player X");
+                if (playerSymbol == 'X') {
+                    takeTurn(arr, scan, n, 'X');
+                } else {
+                    computerTurn(arr, n, 'X');
+                }
+                
+                notPlacedCount--;
+                isX = false;
+                isY = true;
+                displayBoard(arr, n);
+                if (checkWin(arr, n, 'X')) {
+                    System.out.println("The Player X has Won...\nPlayer Y Better Luck Next Time!!!");
+                    break;
+                }
+            } else if (isY) {
+                System.out.println("Player Y");
+                if (playerSymbol == 'Y') {
+                    takeTurn(arr, scan, n, 'Y'); // Player's turn
+                } else {
+                    computerTurn(arr, n, 'Y'); // Computer's turn
+                }
+                notPlacedCount--;
+                isY = false;
+                isX = true;
+                displayBoard(arr, n);
+                if (checkWin(arr, n, 'Y')) {
+                    System.out.println("The Player Y has Won...\nPlayer X Better Luck Next Time!!!");
+                    break;
+                }
+            }
+        }
+        if (notPlacedCount == 0) {
+            System.out.println("It's a draw!");
+        }
+    }
+    public static void takeTurn(char[][] arr,Scanner scan,int n, char humanplayer)
+    {
+        int choice;
+        do {
+            System.out.println("Enter Your Index Position");
+            choice = scan.nextInt();
+       } while (!setIndex(arr, n, choice, 'X'));  // Fix: loop until a valid placement
+    }
+    public static void computerTurn(char[][] arr, int n, char computerSymbol) {
+        Random random = new Random();
+        int choice;
+        do {
+            choice = random.nextInt(n * n) + 1;  // Generate random index (1 to n*n)
+        } while (!setIndex(arr, n, choice, computerSymbol));
+    }
+    public static void displayBoard(char[][] arr, int n) {
+        int temp = 1;
+        for (int i = 0; i < n; i++) {
+            System.out.print("| ");
+            for (int j = 0; j < n; j++) {
+                if (arr[i][j] == '\0') {
+                    System.out.print(temp + " | ");
+                } else {
+                    System.out.print(arr[i][j] + " | ");
+                }
+                temp++;
+            }
+            System.out.println();
+        }
+    }
+    
+    public static boolean setIndex(char[][] arr, int n, int choice, char currentPlayer) {
+        int temp = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (temp == choice) {
+                    if (arr[i][j] == '\0') {
+                        arr[i][j] = currentPlayer;
+                        return true;  // Fix: return true if placed successfully
+                    } else {
+                        System.out.println("Already Placed");
+                        return false;  // Fix: return false if already placed
+                    }
+                }
+                temp++;
+            }
+        }
+        System.out.println("Invalid Position");
+        return false;
+    }
+    
+    public static boolean checkWin(char[][] arr, int n, char symbol) {
+        for (int i = 0; i < n; i++) {
+            if (checkRow(arr, i, symbol, n) || checkColumn(arr, i, symbol, n)) {
+                return true;
+            }
+        }
+        return checkDiagonal(arr, symbol, n);
+    }
+    
+    public static boolean checkRow(char[][] arr, int i, char symbol, int n) {
+        for (int j = 0; j < n; j++) {
+            if (arr[i][j] != symbol) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean checkColumn(char[][] arr, int j, char symbol, int n) {
+        for (int i = 0; i < n; i++) {
+            if (arr[i][j] != symbol) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean checkDiagonal(char[][] arr, char symbol, int n) {
+        int count=0;
+        for (int i = 0; i < n; i++) {
+            if (arr[i][i] == symbol) {
+                count++;
+            }
+        }
+        if(count==n)
+            return true;
+        return false;
+    }
+}
