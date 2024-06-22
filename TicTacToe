@@ -1,0 +1,24 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.ladera.tictactoe;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Jaffy
+ */
+public class TicTacToe {
+    public static void main(String[] args)
+    {
+        Scanner scan=new Scanner(System.in);
+        System.out.println("Enter Mode Of Play You Wanna Choose:\n1.Single Player\n2.Multi Player");
+        int playerMode=scan.nextInt();
+        if(playerMode== 1)
+            SinglePlayer.singlePlayer();
+        else
+            Multiplayer.multiPlayer();
+    }
+}
